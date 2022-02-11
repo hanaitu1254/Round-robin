@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>トーナメント</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="list-area">
+        <form id="form1" action="#">
+            <input type="text" id="user-name">
+            <input type="button" onclick="showMenber()" value="登録">
+            <input type="button" onclick="deleteMenber()" value="削除">
+            <input type="button" onclick="startGame()" value="開始！">
+        </form>
+        <a>参加者一覧</a>
+        <div id="menber"></div>
+    </div>
+    <div id="str-area">
+        <a>再開用のリスト(JSON)</a><br>
+        <a>を入力してください</a>
+        <form id="form2" action="#">
+            <input type="text" id="input-box">
+            <input type="button" onclick="reStartGame()" value="再開！">
+        </form>
+    </div>
+
+    <div id="fight">
+        <table border="1" id="tournament-area"></table>
+        <form id="form3" action="#">
+            <input type="text" id="eventLog" value="">
+            <input type="button" onclick="copyButton()" value="コピー">
+            <input type="button" onclick="outputLog()" value="再開用コード(JSON)">
+        </form>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
