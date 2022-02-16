@@ -6,6 +6,8 @@ const tournamentArea = document.getElementById('tournament-area');
 const fightArea = document.getElementById('fight');
 const eventLog = document.getElementById('eventLog');
 const inputBox = document.getElementById('input-box');
+const detekuru = document.getElementById('detekuru');
+const kieru = document.getElementById('kieru');
 
 //参加者のリストアップ
 let set = new Set();
@@ -17,14 +19,14 @@ const showMenber = () => {
         set.add(inputValue);
         menber.innerHTML = ``;
         for (let inputValue of set) {
-            menber.innerHTML += `<input type="radio" id="${inputValue}" name="name" value="${inputValue}"> <label for=${inputValue}> ${inputValue} </label><br>`;
+            menber.innerHTML += `<input type="radio" class="class" id="${inputValue}" name="name" value="${inputValue}"> <label for=${inputValue}> ${inputValue} </label><br>`;
         }
         userName.value='';
         console.log(set.size);
     }
 };
 
-//エンター入力でも動作(没)
+//エンター入力でも動作(没,変換確定目的の入力でも追加されるから)
 //userName.onkeydown = event => {
 //    if (event.key === 'Enter') {
 //        showMenber()
@@ -94,7 +96,7 @@ const startGame = () => {
                     if (d==e) {
                         tempHtml += `<td>-</td>`;
                     } else {
-                        tempHtml += `<td><input type="radio" name="${x}"></td>`;
+                        tempHtml += `<td><input type="radio" class="class" name="${x}" value="${newList[d]}"></td>`;
                     }
                 }
             }
@@ -135,18 +137,35 @@ const startGame = () => {
 //JSONでデータ保存 文字列作るよ
 let listlog = { //整理用オブジェクト
     names: [],
-    winOrLose: [],
+    winner: [],
 };
+detekuru.style.display = "none";
 function outputLog(){
-    const dropdowns = document.getElementsByClassName('dropdown');
+    eventLog.value = "";
+    const radios = tournamentArea.querySelectorAll(".class");
+    console.log(radios[2].value);
+    for(p=0;p<radios.length;p++){
+        console.log(radios[p]);
+        if (radios[p].checked) {
+            listlog.winner.push(`${radios[p].value}`);
+        } else {
+            listlog.winner.push("none");
+        }
+    }
+    let x;
+    if(d>e){
+        x = `${d}-${e}`;
+    } else if (d<e) {
+        x = `${e}-${d}`;
+    }
     for(f=0;f<newList.length;f++){
         listlog.names.push(`${newList[f]}`,);
     }
     const newListstr = JSON.stringify(listlog);
     eventLog.value = newListstr;
+    detekuru.style.display = "";
+    kieru.style.display = "none";
 
-    console.log(listlog);
-//    console.log(JSON.parse(newListstr))
     console.log(newListstr); //確認用
 };
 
@@ -159,19 +178,18 @@ function reStartGame(){ //前回使用時のJSONから対戦表再現
     
         const inputLog = JSON.parse(inputBox.value);
         console.log(inputLog);
+        newList = inputLog.names;
 
         //表の再生成
         let tempHtml = "";
         tempHtml += `<tr> <td>-</td>`;
-        for (c=0;c<inputLog.names.length;c++) {
-            tempHtml += `<td>${inputLog.names[c]}</td>`;
+        for (c=0;c<newList.length;c++) {
+            tempHtml += `<td>${newList[c]}</td>`;
         }
         tempHtml += `</tr>`;
-
-        //console.log(inputLog.names.length);
-        for (d=0;d<inputLog.names.length;d++) {
-            tempHtml += `<tr><td>${inputLog.names[d]}</td>`;
-            for (e=0;e<inputLog.names.length;e++) {
+        for (d=0;d<newList.length;d++) {
+            tempHtml += `<tr><td>${newList[d]}</td>`;
+            for (e=0;e<newList.length;e++) {
                 let x;
                 if(d>e){
                     x = `${d}-${e}`;
@@ -181,11 +199,22 @@ function reStartGame(){ //前回使用時のJSONから対戦表再現
                 if (d==e) {
                     tempHtml += `<td>-</td>`;
                 } else {
-                    tempHtml += `<td><input type="radio" name="${x}" ></td>`;
+                    tempHtml += `<td ><input type="radio" class="class" name="${x}" value="${newList[d]}"></td>`;
                 }
             }
         }
         tournamentArea.innerHTML = tempHtml;
+
+        const inputs = document.querySelectorAll(".class");
+        for (f=0;f<inputs.length;f++){
+            console.log(inputs[f].value)
+            if (inputLog.winner[f] == inputs[f].value){
+                inputs[f].checked = true;
+            } //else {
+                //inputs[f].checked = false;
+            //}
+        }
+        //tournamentArea.innerHTML = tempHtml;
     }
 };
 
